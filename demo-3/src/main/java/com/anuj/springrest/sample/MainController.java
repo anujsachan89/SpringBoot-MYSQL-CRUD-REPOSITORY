@@ -49,11 +49,16 @@ public class MainController {
 	
 	@PutMapping("/user")
 	public String updateUser(@RequestBody User theUser) {
-		Optional<User> fetchedUser = userRepository.findById(theUser.getId());
-		User user = fetchedUser.get();
-		user.setEmail(theUser.getEmail());
-		user.setName(theUser.getName());
-		userRepository.save(theUser);
-		return "User Updated for user id: "+theUser.getId();
+		if(theUser.getId() !=null) {
+			Optional<User> fetchedUser = userRepository.findById(theUser.getId());
+			if(fetchedUser.isPresent()) {
+				User user = fetchedUser.get();
+				user.setEmail(theUser.getEmail());
+				user.setName(theUser.getName());
+				userRepository.save(theUser);
+				return "User Updated for user id: "+theUser.getId();
+			}
+		}
+		return "User Id is not VALID";
 	}
 }
